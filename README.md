@@ -1,4 +1,4 @@
-# Проект "Интернет магазин"
+# Проект "REST"
 
 ## Описание:
 
@@ -8,7 +8,7 @@
 
 1. Клонируйте репозиторий:
 ```
-git clone git@github.com:yuzhakov59/
+https://github.com/yuzhakov59/REST.git
 ```
 
 2. Установите зависимости:
