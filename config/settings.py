@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'materials',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
 
 DATABASES = {
     'default': {
