@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Payment, PaymentMethodChoices
+from .models import Payment, PaymentMethodChoices, User
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -13,3 +13,8 @@ class PaymentSerializer(serializers.ModelSerializer):
         representation['payment_method'] = PaymentMethodChoices(instance.payment_method).label
         return representation
 
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
