@@ -9,6 +9,7 @@ class LessonSerializer(ModelSerializer):
         fields = "__all__"
 
 
+
 class CourseSerializer(ModelSerializer):
     lesson_count = SerializerMethodField()
 
