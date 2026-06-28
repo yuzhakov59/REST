@@ -2,8 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 
-from materials.models import Course, Lesson
-
 
 class User(AbstractUser):
     username = None
@@ -31,6 +29,7 @@ class PaymentMethodChoices(models.TextChoices):
 
 
 class Payment(models.Model):
+    from materials.models import Course, Lesson
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments', verbose_name="Пользователь")
     date_of_payment = models.DateTimeField(default=timezone.now, verbose_name="Дата оплаты")
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True, related_name='payments', verbose_name="Оплаченный курс")
@@ -45,3 +44,4 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"Платеж от {self.user.email} на сумму {self.amount} от {self.date_of_payment.strftime('%Y-%m-%d')}"
+
