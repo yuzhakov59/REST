@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from .apps import UsersConfig
-from users.views import PaymentViewSet, UserCreateAPIView, SubscriptionManageView
+from users.views import PaymentViewSet, UserCreateAPIView, SubscriptionManageView, Amount_lessonCreateAPIView
 
 app_name = UsersConfig.name
 
@@ -18,5 +18,6 @@ urlpatterns = [
     path('login/', TokenObtainPairView.as_view(permission_classes=(AllowAny,)), name='login'),
     path('token/refresh/', TokenRefreshView.as_view(permission_classes=(AllowAny,)), name='token_refresh'),
     path('api/subscriptions/manage/', SubscriptionManageView.as_view(), name='subscription-manage'),
+    path('lesson/payment/', Amount_lessonCreateAPIView.as_view(), name='create_lesson_payment'),
 ]
 

@@ -1,3 +1,4 @@
+from requests import session
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
@@ -6,9 +7,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from materials.models import Course, Subscription
-from users.models import Payment, User
-from users.serializers import PaymentSerializer, UserSerializer
+from users.models import Payment, User, Amount_lesson
+from users.serializers import PaymentSerializer, UserSerializer, Amount_lessonSerializer
 from users.payment.filters import PaymentFilter
+from users.services import create_stripe_price, create_stripe_session
 
 
 class UserCreateAPIView(CreateAPIView):
@@ -64,5 +66,24 @@ class SubscriptionManageView(APIView):
             message = 'Подписка добавлена.'
             status_code = status.HTTP_201_CREATED
         return Response({"message": message}, status=status_code)
+
+
+class Amount_lessonCreateAPIView(CreateAPIView):
+    serializer_class = Amount_lessonSerializer
+    queryset = Amount_lesson.objects.all()
+
+    def perform_create(self, serializer):
+        """
+        Переопределяем метод perform_create для создания объекта Amount_lesson,
+        генерации ссылки на оплату Stripe и сохранения ее в объекте.
+        """
+        payment = serializer.save(user=self.request.user)
+        lesson = payment.lesson
+        price = create_stripe_price(lesson.amount)
+        session_id, payment_link = create_stripe_session(price)
+        payment.amount_url = payment_link
+        payment.save()
+        serializer = self.get_serializer(payment)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

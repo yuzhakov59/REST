@@ -1,7 +1,6 @@
 import os
 from datetime import timedelta
 from pathlib import Path
-from unittest.mock import DEFAULT
 
 from django.conf.global_settings import AUTH_USER_MODEL
 from dotenv import load_dotenv
@@ -11,6 +10,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
+STRIPE_KEY = os.getenv('STRIPE_KEY')
 
 DEBUG = True
 
@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'users',
     'materials',
     'django_filters',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
