@@ -45,3 +45,17 @@ class Payment(models.Model):
     def __str__(self):
         return f"Платеж от {self.user.email} на сумму {self.amount} от {self.date_of_payment.strftime('%Y-%m-%d')}"
 
+
+class Amount_lesson(models.Model):
+    from materials.models import Lesson
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_amount')
+    lesson = models.ForeignKey(Lesson, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Оплаченный урок")
+    amount_url = models.URLField(max_length=400, verbose_name='ссылка на оплату', blank=True, null=True)
+
+
+    def __str__(self):
+        return self.amount_url
+
+    class Meta:
+        verbose_name = 'оплата'
+        verbose_name_plural = 'оплаты'

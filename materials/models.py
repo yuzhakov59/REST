@@ -23,6 +23,7 @@ class Lesson(models.Model):
     сourse = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='сour')
     video_url = models.URLField(verbose_name='ссылка на видео', blank=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='владелец', related_name='user_lesson')
+    amount = models.PositiveIntegerField(verbose_name='цена курса', default=10)
 
     def __str__(self):
         return self.name
