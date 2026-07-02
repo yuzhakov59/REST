@@ -2,11 +2,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 
-from materials.models import Course, Lesson
+from materials.models import Course, Lesson, Subscription
 from materials.paginations import CustomPagination
 from materials.serializers import CourseSerializer, LessonSerializer, CourseDetailSerializer
 from materials.validators import UrlValidator
 from users.permissions import IsModer, IsOwner
+from materials.tasks import send_course_update_email
 
 
 class CourseViewSet(ModelViewSet):
@@ -27,6 +28,22 @@ class CourseViewSet(ModelViewSet):
         elif self.action == "destroy":
             self.permission_classes = (~IsModer | IsOwner,)
         return super().get_permissions()
+
+    def update(self, request, *args, **kwargs):
+        """ Переопределяем метод update для вызова задачи отправки писем. """
+
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        subscribers = Subscription.objects.filter(сourse=instance, status=True)
+        for subscription in subscribers:
+            send_course_update_email.delay(subscription.user.email, instance.name)
+        return self.get_object()
+
+    def perform_update(self, serializer):
+        serializer.save()
 
 
 class LessonListAPIView(ListAPIView):
