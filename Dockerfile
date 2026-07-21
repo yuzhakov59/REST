@@ -13,6 +13,8 @@ COPY . .
 
 ENV DJANGO_SETTINGS_MODULE='config.settings'
 
+RUN mkdir -p /app/static
+
 RUN mkdir -p /app/media
 
 # Открываем порт 8000 для взаимодействия с приложением
